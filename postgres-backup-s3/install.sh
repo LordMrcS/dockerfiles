@@ -4,7 +4,13 @@
 set -eo pipefail
 
 apk update
-apk add postgresql-client openssl aws-cli
+
+# install postgresql-client
+apk add postgresql-client 
+
+# install s3 tools
+apk add python3 py3-pip
+pip install awscli
 
 # cleanup
 rm -rf /var/cache/apk/*

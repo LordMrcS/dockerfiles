@@ -5,7 +5,7 @@ set -eo pipefail
 
 apk update
 
-# install mysqldump
+# install mysql-client
 apk add mysql-client
 apk add mariadb-connector-c
 

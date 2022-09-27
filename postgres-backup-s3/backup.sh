@@ -48,10 +48,12 @@ else
   AWS_ARGS="--endpoint-url ${S3_ENDPOINT}"
 fi
 
-# env vars needed for aws tools
-export AWS_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID
-export AWS_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY
-export AWS_DEFAULT_REGION=$S3_REGION
+if [ "${S3_IAMROLE}" != "true" ]; then
+  # env vars needed for aws tools - only if an IAM role is not used
+  export AWS_ACCESS_KEY_ID=$S3_ACCESS_KEY_ID
+  export AWS_SECRET_ACCESS_KEY=$S3_SECRET_ACCESS_KEY
+  export AWS_DEFAULT_REGION=$S3_REGION
+fi
 
 export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER $POSTGRES_EXTRA_OPTS"
