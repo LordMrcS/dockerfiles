@@ -77,7 +77,7 @@ if [ "${POSTGRES_BACKUP_ALL}" == "true" ]; then
   fi
 
   echo "Uploading dump to $S3_BUCKET"
-  cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}/${S3_PREFIX}/${DEST_FILE}" || exit 2
+  cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}/${S3_PREFIX}/${DEST_FILE}"
 
   echo "SQL backup uploaded successfully"
   rm -rf $SRC_FILE
@@ -105,7 +105,7 @@ else
     fi
 
     echo "Uploading dump to $S3_BUCKET"
-    cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}/${S3_PREFIX}/${DEST_FILE}" || exit 2
+    cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}/${S3_PREFIX}/${DEST_FILE}"
 
     echo "SQL backup uploaded successfully"
     rm -rf $SRC_FILE
