@@ -84,8 +84,7 @@ if [ "${POSTGRES_BACKUP_ALL}" == "true" ]; then
 else
   OIFS="$IFS"
   IFS=','
-  for DB in $POSTGRES_DATABASE
-  do
+  for DB in $POSTGRES_DATABASE; do
     IFS="$OIFS"
 
     SRC_FILE=dump.sql.gz
