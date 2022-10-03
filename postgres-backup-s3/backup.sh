@@ -97,6 +97,9 @@ else
     SRC_FILE=dump.sql.gz
     DEST_FILE=${DB}_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz
 
+    echo "Creating dump of ${DB} database from ${POSTGRES_HOST}..."
+    pg_dump $POSTGRES_HOST_OPTS $DB | gzip > $SRC_FILE
+
     if [ "${ENCRYPTION_PASSWORD}" != "**None**" ]; then
       echo "Encrypting ${SRC_FILE}"
       openssl enc -aes-256-cbc -in $SRC_FILE -out ${SRC_FILE}.enc -k $ENCRYPTION_PASSWORD
@@ -106,15 +109,19 @@ else
       rm $SRC_FILE
       SRC_FILE="${SRC_FILE}.enc"
       DEST_FILE="${DEST_FILE}.enc"
+
+      echo "Uploading dump to $S3_BUCKET"
+      cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}${S3_PREFIX}${DEST_FILE}" || exit 2
+
+      echo "SQL backup uploaded successfully"
+      rm -rf $SRC_FILE
+      rm -rg $DEST_FILE
+    else
+      echo "Uploading dump to $S3_BUCKET"
+      cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}${S3_PREFIX}${DEST_FILE}" || exit 2
+
+      echo "SQL backup uploaded successfully"
+      rm -rf $SRC_FILE
     fi
-
-    echo "Creating dump of ${DB} database from ${POSTGRES_HOST}..."
-    pg_dump $POSTGRES_HOST_OPTS $DB | gzip > $SRC_FILE
-
-    echo "Uploading dump to $S3_BUCKET"
-    cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}${S3_PREFIX}${DEST_FILE}" || exit 2
-
-    echo "SQL backup uploaded successfully"
-    rm -rf $SRC_FILE
   done
 fi
