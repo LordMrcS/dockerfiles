@@ -58,12 +58,6 @@ fi
 export PGPASSWORD=$POSTGRES_PASSWORD
 POSTGRES_HOST_OPTS="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER $POSTGRES_EXTRA_OPTS"
 
-if [ -z ${S3_PREFIX+x} ]; then
-  S3_PREFIX="/"
-else
-  S3_PREFIX="/${S3_PREFIX}/"
-fi
-
 if [ "${POSTGRES_BACKUP_ALL}" == "true" ]; then
   SRC_FILE=dump.sql.gz
   DEST_FILE=all_$(date +"%Y-%m-%dT%H:%M:%SZ").sql.gz
@@ -83,7 +77,7 @@ if [ "${POSTGRES_BACKUP_ALL}" == "true" ]; then
   fi
 
   echo "Uploading dump to $S3_BUCKET"
-  cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}${S3_PREFIX}${DEST_FILE}" || exit 2
+  cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}/${S3_PREFIX}/${DEST_FILE}" || exit 2
 
   echo "SQL backup uploaded successfully"
   rm -rf $SRC_FILE
@@ -112,7 +106,7 @@ else
     fi
 
     echo "Uploading dump to $S3_BUCKET"
-    cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}${S3_PREFIX}${DEST_FILE}" || exit 2
+    cat $SRC_FILE | aws $AWS_ARGS s3 cp - "s3://${S3_BUCKET}/${S3_PREFIX}/${DEST_FILE}" || exit 2
 
     echo "SQL backup uploaded successfully"
     rm -rf $SRC_FILE
