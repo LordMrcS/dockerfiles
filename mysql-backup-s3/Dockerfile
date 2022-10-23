@@ -1,8 +1,10 @@
 FROM alpine:latest
 LABEL maintainer="Johannes Schickling <schickling.j@gmail.com>"
 
-ADD install.sh install.sh
-RUN sh install.sh && rm install.sh
+RUN apk update && \
+    apk add mysql-client mariadb-connector-c python3 py3-pip && \
+    rm -rf /var/cache/apk/*
+RUN pip install awscli
 
 ENV MYSQLDUMP_OPTIONS --quote-names --quick --add-drop-table --add-locks --allow-keywords --disable-keys --extended-insert --single-transaction --create-options --comments --net_buffer_length=16384
 ENV MYSQLDUMP_DATABASE --all-databases
