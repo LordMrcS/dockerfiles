@@ -8,6 +8,6 @@ fi
 if [ "${SCHEDULE}" = "**None**" ]; then
   sh backup.sh
 else
-  echo "$SCHEDULE /bin/sh /backup.sh" > /etc/crontabs/root
-  exec crond -d 8 -f
+  echo "$SCHEDULE /bin/sh /backup.sh >/proc/1/fd/1 2>/proc/1/fd/2" > /etc/crontabs/root
+  exec crond -d 8 -f -l 2
 fi
