@@ -1,8 +1,10 @@
 FROM alpine:latest
 LABEL maintainer="Johannes Schickling <schickling.j@gmail.com>"
 
-ADD install.sh install.sh
-RUN sh install.sh && rm install.sh
+RUN apk update && \
+    apk add postgresql-client python3 py3-pip && \
+    rm -rf /var/cache/apk/*
+RUN pip install awscli
 
 ENV POSTGRES_DATABASE **None**
 ENV POSTGRES_BACKUP_ALL false
