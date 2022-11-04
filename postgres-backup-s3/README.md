@@ -11,31 +11,26 @@ $ docker run -e S3_ACCESS_KEY_ID=key -e S3_SECRET_ACCESS_KEY=secret -e S3_BUCKET
 
 Docker Compose:
 ```yaml
-postgres:
-  image: postgres
-  environment:
-    POSTGRES_USER: user
-    POSTGRES_PASSWORD: password
-
-pgbackups3:
-  image: schickling/postgres-backup-s3
-  depends_on:
-    - postgres
-  links:
-    - postgres
-  environment:
-    SCHEDULE: '@daily'
-    S3_REGION: region
-    S3_ACCESS_KEY_ID: key
-    S3_SECRET_ACCESS_KEY: secret
-    S3_BUCKET: my-bucket
-    S3_PREFIX: backup
-    POSTGRES_BACKUP_ALL: "false"
-    POSTGRES_HOST: host
-    POSTGRES_DATABASE: dbname
-    POSTGRES_USER: user
-    POSTGRES_PASSWORD: password
-    POSTGRES_EXTRA_OPTS: '--schema=public --blobs'
+version: '3.3'
+services:
+  backup-pqsql:
+    image: mrcs2000/postgres-backup-s3:latest
+    environment:
+      - S3_ENDPOINT=${S3_ENDPOINT}
+      - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID}
+      - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}
+      - S3_BUCKET=${S3_BUCKET}
+      - S3_PREFIX=${S3_PREFIX}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - SCHEDULE=${SCHEDULE}
+    networks:
+        backupdbs3:
+networks:
+  backupdbs3:
+    external: true
 ```
 
 ### Automatic Periodic Backups
