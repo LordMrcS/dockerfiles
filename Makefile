@@ -21,7 +21,7 @@ help:
 all: freeradius mysql-backup-s3 nodejs octave opencv postgres-backup-s3 postgres-restore-s3 ## Build all images
 
 .PHONY: freeradius
-nodejs: ## Build nodejs image
+nodejs: ## Build freeradius image
 	$(call docker_build_and_push,freeradius)
 
 .PHONY: mysql-backup-s3
