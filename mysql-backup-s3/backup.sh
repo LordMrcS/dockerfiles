@@ -98,10 +98,6 @@ if [ ! -z "$(echo $MULTI_FILES | grep -i -E "(yes|true|1)")" ]; then
       copy_s3 $DUMP_FILE $S3_FILE
     else
       >&2 echo "Error creating dump of ${DB}"
-      exit 1
-    fi
-    if [ "${HEARTBEAT}" != "**None**" ]; then
-      curl -fsS -m 10 --retry 5 -o /dev/null ${HEARTBEAT}
     fi
   done
 # Multi file: no
@@ -121,10 +117,6 @@ else
     copy_s3 $DUMP_FILE $S3_FILE
   else
     >&2 echo "Error creating dump of all databases"
-    exit 1
-  fi
-  if [ "${HEARTBEAT}" != "**None**" ]; then
-      curl -fsS -m 10 --retry 5 -o /dev/null ${HEARTBEAT}
   fi
 fi
 
