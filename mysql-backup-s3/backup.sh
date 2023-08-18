@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -eo pipefail
+set -euo pipefail
 
 if [ "${S3_ACCESS_KEY_ID}" == "**None**" ]; then
   echo "Error: You did not set the S3_ACCESS_KEY_ID environment variable."
@@ -68,7 +68,9 @@ copy_s3 () {
   if [ $? != 0 ]; then
     >&2 echo "Error uploading ${DEST_FILE} on S3"
   fi
-
+  if [ "${HEARTBEAT}" != "**None**" ]; then
+    wget -q --timeout=10 --tries=5 -O /dev/null ${HEARTBEAT}
+  fi
   rm $SRC_FILE
 }
 # Multi file: yes

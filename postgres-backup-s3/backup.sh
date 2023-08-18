@@ -82,7 +82,7 @@ if [ "${POSTGRES_BACKUP_ALL}" == "true" ]; then
   echo "SQL backup uploaded successfully"
   rm -rf $SRC_FILE
   if [ "${HEARTBEAT}" != "**None**" ]; then
-    curl -fsS -m 10 --retry 5 -o /dev/null ${HEARTBEAT}
+    wget -q --timeout=10 --tries=5 -O /dev/null ${HEARTBEAT}
   fi
 else
   OIFS="$IFS"
@@ -113,7 +113,7 @@ else
     echo "SQL backup uploaded successfully"
     rm -rf $SRC_FILE
     if [ "${HEARTBEAT}" != "**None**" ]; then
-      curl -fsS -m 10 --retry 5 -o /dev/null ${HEARTBEAT}
+      wget -q --timeout=10 --tries=5 -O /dev/null ${HEARTBEAT}
     fi
   done
 fi
